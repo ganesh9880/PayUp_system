@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Hardcoded API URL
-const API_BASE_URL = 'http://localhost:5000/api';
+// Use environment variable for API URL, fallback to deployed URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://payup-system.onrender.com/api';
 
 // Create axios instance with default config
 const api = axios.create({
