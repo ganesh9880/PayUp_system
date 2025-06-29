@@ -88,6 +88,25 @@ app.get('/api/debug', (req, res) => {
   });
 });
 
+// Test MongoDB connection
+app.get('/api/test-db', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const count = await User.countDocuments();
+    res.json({ 
+      message: 'Database connection successful',
+      userCount: count,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Database connection failed',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
