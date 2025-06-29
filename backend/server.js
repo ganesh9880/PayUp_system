@@ -77,6 +77,17 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Debug endpoint to test environment variables
+app.get('/api/debug', (req, res) => {
+  res.json({ 
+    message: 'Debug endpoint',
+    hasMongoUri: !!process.env.MONGODB_URI,
+    hasJwtSecret: !!process.env.JWT_SECRET,
+    nodeEnv: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
