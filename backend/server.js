@@ -64,9 +64,13 @@ mongoose.connect(MONGODB_URI, {
 });
 
 // Routes
+console.log('Loading routes...');
 app.use('/api/auth', authRoutes);
+console.log('Auth routes loaded');
 app.use('/api/users', userRoutes);
+console.log('User routes loaded');
 app.use('/api/groups', groupRoutes);
+console.log('Group routes loaded');
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -105,6 +109,33 @@ app.get('/api/test-db', async (req, res) => {
       timestamp: new Date().toISOString()
     });
   }
+});
+
+// List all available routes for debugging
+app.get('/api/routes', (req, res) => {
+  const routes = [];
+  app._router.stack.forEach(middleware => {
+    if (middleware.route) {
+      routes.push({
+        path: middleware.route.path,
+        methods: Object.keys(middleware.route.methods)
+      });
+    } else if (middleware.name === 'router') {
+      middleware.handle.stack.forEach(handler => {
+        if (handler.route) {
+          routes.push({
+            path: '/api' + handler.route.path,
+            methods: Object.keys(handler.route.methods)
+          });
+        }
+      });
+    }
+  });
+  res.json({ 
+    message: 'Available routes',
+    routes: routes,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Error handling middleware
