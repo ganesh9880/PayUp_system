@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Select All</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .debug-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .error { background: rgba(244, 67, 54, 0.3); }
+        .success { background: rgba(76, 175, 80, 0.3); }
+        .warning { background: rgba(255, 193, 7, 0.3); }
+        .info { background: rgba(33, 150, 243, 0.3); }
+        
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .console-output {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐛 Debug Select All Issues</h1>
+    
+    <div class="debug-section error">
+        <h2>❌ Current Issues</h2>
+        <ul>
+            <li>Select All buttons not working properly</li>
+            <li>Need to identify what's failing</li>
+            <li>Check console logs for errors</li>
+        </ul>
+    </div>
+
+    <div class="debug-section info">
+        <h2>🔍 Debug Steps</h2>
+        <ol>
+            <li>Open browser console (F12)</li>
+            <li>Go to CreateGroup page</li>
+            <li>Click "Select All" button</li>
+            <li>Check console logs</li>
+            <li>Look for any error messages</li>
+        </ol>
+    </div>
+
+    <div class="debug-section warning">
+        <h2>⚠️ Common Issues</h2>
+        <ul>
+            <li><strong>No users loaded:</strong> Check if users are being fetched from backend</li>
+            <li><strong>State not updating:</strong> Check if setFormData is working</li>
+            <li><strong>Autocomplete not responding:</strong> Check if value prop is correct</li>
+            <li><strong>Backend errors:</strong> Check if API calls are failing</li>
+        </ul>
+    </div>
+
+    <div class="debug-section">
+        <h2>🧪 Test Commands</h2>
+        <button onclick="testBackend()">Test Backend Connection</button>
+        <button onclick="testUsersAPI()">Test Users API</button>
+        <button onclick="clearConsole()">Clear Console</button>
+        <div id="testResults" class="console-output">Click buttons to test...</div>
+    </div>
+
+    <div class="debug-section success">
+        <h2>✅ What Should Work</h2>
+        <ul>
+            <li><strong>CreateGroup:</strong> Select All should add all available users to members</li>
+            <li><strong>ExpenseForm:</strong> Select All should add all group members to participants</li>
+            <li><strong>GroupDetails:</strong> Bulk settlement actions should work</li>
+        </ul>
+    </div>
+
+    <script>
+        function testBackend() {
+            const results = document.getElementById('testResults');
+            results.innerHTML += '\n🔍 Testing backend connection...\n';
+            
+            fetch('http://localhost:5000/api/auth/test', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                results.innerHTML += `✅ Backend responding: ${response.status}\n`;
+            })
+            .catch(error => {
+                results.innerHTML += `❌ Backend error: ${error.message}\n`;
+            });
+        }
+
+        function testUsersAPI() {
+            const results = document.getElementById('testResults');
+            results.innerHTML += '\n👥 Testing users API...\n';
+            
+            fetch('http://localhost:5000/api/users', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => {
+                results.innerHTML += `✅ Users API responding: ${response.status}\n`;
+                return response.json();
+            })
+            .then(data => {
+                results.innerHTML += `📊 Found ${data.length} users\n`;
+            })
+            .catch(error => {
+                results.innerHTML += `❌ Users API error: ${error.message}\n`;
+            });
+        }
+
+        function clearConsole() {
+            document.getElementById('testResults').innerHTML = 'Console cleared...\n';
+        }
+
+        // Auto-test on load
+        window.onload = function() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = '🚀 Debug page loaded. Start testing...\n';
+        };
+    </script>
+</body>
+</html> 

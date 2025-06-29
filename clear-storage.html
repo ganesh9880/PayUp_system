@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear PayUp Storage</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>PayUp Storage Clearer</h1>
+    <p>Click the button below to clear your browser's localStorage for PayUp:</p>
+    
+    <button onclick="clearStorage()">Clear PayUp Storage</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        function clearStorage() {
+            try {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                document.getElementById('result').innerHTML = '<p class="success">✅ Storage cleared successfully! You can now close this tab and go back to PayUp.</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p class="error">❌ Error clearing storage: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html> 
